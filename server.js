@@ -22,6 +22,7 @@ mongoose.connect(
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useCreateIndex: true,
     },
     (error) => {
         if (error) throw error;
@@ -29,4 +30,4 @@ mongoose.connect(
     })
 
 //routes set up
-app.use("/users", userRouter);
+app.use("/", userRouter);
