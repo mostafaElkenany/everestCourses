@@ -126,7 +126,20 @@ function AdminForm() {
                                 helperText={errors.password}
                             />
                         </Grid>
-
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                type="password"
+                                id="confirmPassword"
+                                onChange={handleChange}
+                                error={errors.confirmPassword ? true : false}
+                                helperText={errors.confirmPassword}
+                            />
+                        </Grid>
                     </Grid>
                     <Button
                         type="submit"
