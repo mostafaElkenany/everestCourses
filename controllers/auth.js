@@ -16,13 +16,44 @@ const register = async (req, res, next) => {
         }
 
         const { firstName, lastName, email, password } = req.body;
-        
+
 
         const newUser = new User({
             firstName,
             lastName,
             email,
             password,
+        })
+        const savedUser = await newUser.save();
+        return res.json(savedUser);
+
+    } catch (error) {
+        // res.status(500).send(error.message);
+        next(error);
+    }
+}
+
+const registerAdmin = async (req, res, next) => {
+    try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // return res.status(400).json({ errors: errors.array() });
+            const error = new Error('Input validation error');
+            error.status = 400;
+            error.details = errors.array();
+            throw error;
+        }
+
+        const { firstName, lastName, email, password } = req.body;
+
+
+        const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            password,
+            isAdmin: true,
         })
         const savedUser = await newUser.save();
         return res.json(savedUser);
@@ -53,22 +84,24 @@ const login = async (req, res, next) => {
             error.status = 400;
             throw error;
         } else {
+            if(user.disabled) {
+                const error = new Error('Account disabled');
+                error.status = 400;
+                throw error;
+            }
             const match = await bcrypt.compare(password, user.password);
             if (!match) {
                 // return res.status(400).send('wrong email or password');
                 const error = new Error('wrong email or password');
                 error.status = 400;
                 throw error;
-            }
-            const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET);
-            res.json({
-                token,
-                user: {
-                    id: user._id,
-                    email: user.email,
-                    name: user.firstName,
-                }
-            })
+            } 
+            const token = jwt.sign({
+                id: user._id,
+                email: user.email,
+                isAdmin: user.isAdmin,
+            }, process.env.JWT_SECRET);
+            res.json({ token })
         }
     } catch (err) {
         // res.status(400).send(error.message);
@@ -76,4 +109,4 @@ const login = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login };
+module.exports = { register, registerAdmin, login };

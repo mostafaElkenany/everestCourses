@@ -12,7 +12,9 @@ const registerValidators = [
     check('firstName').trim().escape().notEmpty().withMessage('First name required'),
     check('lastName').trim().escape().notEmpty().withMessage('Last name required'),
     check('password').trim().escape().notEmpty().withMessage('password required').isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
-
+    check('confirmPassword', 'Password does not match')
+        .exists()
+        .custom((value, { req }) => value === req.body.password),
 ]
 
 const loginValidators = [
@@ -20,4 +22,4 @@ const loginValidators = [
     check('password').trim().notEmpty().withMessage("password is required"),
 ]
 
-module.exports = {registerValidators, loginValidators};
+module.exports = { registerValidators, loginValidators };

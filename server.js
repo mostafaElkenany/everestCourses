@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/auth');
+const adminRouter = require('./routes/admin');
 const errorHandler = require('./middleware/errorHandler');
+const { auth, isAdmin } = require('./middleware/auth');
 
 require('dotenv').config();
 
@@ -28,6 +30,7 @@ app.use(cors());
 
 //routes set up
 app.use("/", userRouter);
+app.use("/dashboard",  adminRouter);
 
 //error handling middleware
 app.use(errorHandler);

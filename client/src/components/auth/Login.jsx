@@ -47,7 +47,8 @@ export default function Login() {
         if (token) {
             const user = JSON.parse(window.atob(token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
             setUserData(user)
-            history.push("/");
+            if (user.isAdmin) history.push("/dashboard"); 
+            else history.push("/");
         }
     }, [history, setUserData])
 
@@ -57,7 +58,6 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const user = { ...userInput };
         try {
             const response = await axios.post("/login", userInput);
             const token = response.data.token;
@@ -65,7 +65,8 @@ export default function Login() {
             // console.log(user);
             setUserData(user)
             localStorage.setItem('auth-token', token)
-            history.push("/");
+            if (user.isAdmin) history.push("/dashboard"); 
+            else history.push("/");
         } catch (error) {
             // console.log(error.response.data);
             if (error.response.data.errors) {
@@ -115,7 +116,6 @@ export default function Login() {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
                         onChange={handleChange}
                         error={errors.password ? true : false}
                         helperText={errors.password}

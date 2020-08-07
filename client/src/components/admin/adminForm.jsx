@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from '../../api/axios'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import UserContext from '../../context/UserContext'
+import WithAdminHeaders from '../HOC/WithAdminHeaders';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -33,22 +32,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Register() {
+function AdminForm() {
     const classes = useStyles();
 
     const history = useHistory();
     const [userInput, setUserInput] = useState({})
     const [errors, setErrors] = useState({})
-    const { setUserData } = useContext(UserContext);
-
-    useEffect(() => {
-        const token = localStorage.getItem('auth-token');
-        if (token) {
-            const user = JSON.parse(window.atob(token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
-            setUserData(user)
-            history.push("/login");
-        }
-    }, [history, setUserData])
 
     const handleChange = (e) => {
         setUserInput({ ...userInput, [e.target.name]: e.target.value });
@@ -56,12 +45,10 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const newUser = { ...userInput };
         try {
-            await axios.post("/register", userInput);
-            history.push('/login');
+            await axios.post("/dashboard/admins", userInput);
+            history.push('/dashboard/admins');
         } catch (error) {
-            // console.log(error.response.data);
             if (error.response.data.errors) {
                 setErrors(error.response.data.errors.reduce((agg, cur) => {
                     return agg = Object.assign(agg, { [cur.param]: cur.msg })
@@ -78,7 +65,7 @@ function Register() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Create Admin
                 </Typography>
                 <form className={classes.form} noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
@@ -139,20 +126,7 @@ function Register() {
                                 helperText={errors.password}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="confirmPassword"
-                                label="Confirm Password"
-                                type="password"
-                                id="confirmPassword"
-                                onChange={handleChange}
-                                error={errors.confirmPassword ? true : false}
-                                helperText={errors.confirmPassword}
-                            />
-                        </Grid>
+
                     </Grid>
                     <Button
                         type="submit"
@@ -161,19 +135,12 @@ function Register() {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign Up
+                        Create Admin
                     </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link to="/login" variant="body2">
-                                Already have an account? Sign in
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </form>
             </div>
         </Container>
     );
 }
 
-export default Register
+export default WithAdminHeaders(AdminForm)
