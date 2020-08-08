@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const userRouter = require('./routes/auth');
+const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const errorHandler = require('./middleware/errorHandler');
 const { auth, isAdmin } = require('./middleware/auth');
@@ -15,6 +15,7 @@ mongoose.connect(
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
+        useFindAndModify: false,
     },
     (error) => {
         if (error) throw error;
@@ -26,11 +27,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static('uploads'))
 
 
 //routes set up
-app.use("/", userRouter);
-app.use("/dashboard",  adminRouter);
+app.use("/", authRouter);
+app.use("/dashboard", [auth, isAdmin], adminRouter);
 
 //error handling middleware
 app.use(errorHandler);

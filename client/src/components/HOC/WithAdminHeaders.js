@@ -86,12 +86,6 @@ const WithAdminHeaders = (Component) => {
                                 <ListItemText primary={"Users"} />
                             </ListItem>
                         </Link>
-                        <Link to="/dashboard/courses">
-                            <ListItem button key={"Courses"}>
-                                <ListItemIcon> <InboxIcon /> </ListItemIcon>
-                                <ListItemText primary={"Courses"} />
-                            </ListItem>
-                        </Link>
                         <Link to="/dashboard/categories">
                             <ListItem button key={"Categories"}>
                                 <ListItemIcon> <InboxIcon /> </ListItemIcon>

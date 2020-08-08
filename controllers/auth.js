@@ -47,7 +47,6 @@ const registerAdmin = async (req, res, next) => {
 
         const { firstName, lastName, email, password } = req.body;
 
-
         const newUser = new User({
             firstName,
             lastName,
@@ -84,7 +83,7 @@ const login = async (req, res, next) => {
             error.status = 400;
             throw error;
         } else {
-            if(user.disabled) {
+            if (user.disabled) {
                 const error = new Error('Account disabled');
                 error.status = 400;
                 throw error;
@@ -95,7 +94,7 @@ const login = async (req, res, next) => {
                 const error = new Error('wrong email or password');
                 error.status = 400;
                 throw error;
-            } 
+            }
             const token = jwt.sign({
                 id: user._id,
                 email: user.email,
@@ -109,4 +108,17 @@ const login = async (req, res, next) => {
     }
 }
 
-module.exports = { register, registerAdmin, login };
+const disableUser = async (req, res, next) => {
+    try {
+        const { params: { id } } = req
+        let user = await User.findById(id);
+        user.disabled = !user.disabled;
+        user = await user.save();
+        res.status(200).json(user);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { register, registerAdmin, login, disableUser };
