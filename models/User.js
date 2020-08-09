@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, required: true, minlength: 3, maxlength: 14 },
     email: { type: String, required: true, unique: true, match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ },
     password: { type: String, required: true },
-    points: { type: Number, min: 50, max: 500 },
+    points: { type: Number, default: 0 },
     courses: [
         {
             course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },

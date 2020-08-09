@@ -24,4 +24,24 @@ function AdminRoute({ component: Component, ...rest }) {
     )
 }
 
-export default AdminRoute
+function UserRoute({ component: Component, ...rest }) {
+    const { userData } = useContext(UserContext);
+    const RenderComponent = (props) => {
+        if (userData) {
+            return <Component {...props} />
+        } else {
+            return <Redirect to={{
+                pathname: "/login",
+                state: { from: props.location },
+            }} />;
+        }
+    }
+    return (
+        <Route
+            {...rest}
+            component={RenderComponent}
+        />
+    )
+}
+
+export { AdminRoute, UserRoute }

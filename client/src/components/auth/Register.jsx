@@ -101,7 +101,7 @@ function Register() {
                             <TextField
                                 variant="outlined"
                                 required
-                                ful$2a$10$lWidthpassword
+                                fullWidth
                                 id="lastName"
                                 label="Last Name"
                                 name="lastName"

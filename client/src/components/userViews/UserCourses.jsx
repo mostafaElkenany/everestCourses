@@ -20,12 +20,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Home() {
+function CategoryCourses(props) {
     const classes = useStyles();
-    const [courses, setCourses] = useState([])
+    const [userCourses, setUserCourses] = useState([])
     useEffect(() => {
-        axios.get('/courses')
-            .then(res => setCourses(res.data))
+        axios.get(`/user/courses`)
+            .then(res => {
+                setUserCourses(res.data);
+            })
             .catch(err => console.log(err))
     }, [])
     return (
@@ -34,18 +36,13 @@ function Home() {
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Welcome
+                            My Courses
                         </Typography>
-                        <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            Something short and leading about the collection below—its contents, the creator, etc.
-                            Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-                            entirely.
-            </Typography>
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
                     <Grid container spacing={4}>
-                        {courses.map((course) => <CourseCard key={course._id} course={course} />)}
+                        {userCourses.map((userCourse) => <CourseCard key={userCourse._id} course={userCourse.course} />)}
                     </Grid>
                 </Container>
             </main>
@@ -54,4 +51,4 @@ function Home() {
     );
 }
 
-export default WithUserHeaders(Home)
+export default WithUserHeaders(CategoryCourses)

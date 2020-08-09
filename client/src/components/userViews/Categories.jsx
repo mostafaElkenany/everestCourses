@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import CourseCard from './CourseCard'
+import CategoryCard from './CategoryCard'
 import WithUserHeaders from '../HOC/WithUserHeaders'
 import axios from '../../api/axios'
 
@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Home() {
+function Categories() {
     const classes = useStyles();
-    const [courses, setCourses] = useState([])
+    const [categories, setCategories] = useState([])
     useEffect(() => {
-        axios.get('/courses')
-            .then(res => setCourses(res.data))
+        axios.get('/categories')
+            .then(res => setCategories(res.data))
             .catch(err => console.log(err))
     }, [])
     return (
@@ -34,18 +34,13 @@ function Home() {
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Welcome
+                            Categories
                         </Typography>
-                        <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            Something short and leading about the collection below—its contents, the creator, etc.
-                            Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-                            entirely.
-            </Typography>
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
                     <Grid container spacing={4}>
-                        {courses.map((course) => <CourseCard key={course._id} course={course} />)}
+                        {categories.map((category) => <CategoryCard key={category._id} category={category} />)}
                     </Grid>
                 </Container>
             </main>
@@ -54,4 +49,4 @@ function Home() {
     );
 }
 
-export default WithUserHeaders(Home)
+export default WithUserHeaders(Categories)
