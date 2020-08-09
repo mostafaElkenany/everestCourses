@@ -11,9 +11,16 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import { Link } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import GroupIcon from '@material-ui/icons/Group';
+import CategoryIcon from '@material-ui/icons/Category';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 
 const drawerWidth = 240;
 
@@ -45,14 +52,22 @@ const WithAdminHeaders = (Component) => {
     const AdminHeaders = (props) => {
 
         const classes = useStyles();
-        const { setUserData } = useContext(UserContext);
+        const { userData, setUserData } = useContext(UserContext);
         const history = useHistory();
         const logout = () => {
             localStorage.removeItem("auth-token");
             setUserData(null)
             history.push("/login");
         }
+        const [anchorEl, setAnchorEl] = React.useState(null);
 
+        const handleClick = (event) => {
+            setAnchorEl(event.currentTarget);
+        };
+
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -73,35 +88,47 @@ const WithAdminHeaders = (Component) => {
                 >
                     <div className={classes.toolbar} />
                     <Divider />
+                    <Button aria-controls="simple-menu"
+                        variant="contained"
+                        color="primary"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                    >
+                        {userData.name}
+                        <ArrowDropDownCircleIcon />
+                    </Button>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={logout}>Logout</MenuItem>
+                    </Menu>
                     <List>
                         <Link to="/dashboard/admins">
                             <ListItem button key={"Admins"}>
-                                <ListItemIcon> <InboxIcon /> </ListItemIcon>
+                                <ListItemIcon> <GroupIcon /> </ListItemIcon>
                                 <ListItemText primary={"Admins"} />
                             </ListItem>
                         </Link>
                         <Link to="/dashboard/users">
                             <ListItem button key={"Users"}>
-                                <ListItemIcon> <InboxIcon /> </ListItemIcon>
+                                <ListItemIcon> <PeopleOutlineIcon /> </ListItemIcon>
                                 <ListItemText primary={"Users"} />
                             </ListItem>
                         </Link>
                         <Link to="/dashboard/categories">
                             <ListItem button key={"Categories"}>
-                                <ListItemIcon> <InboxIcon /> </ListItemIcon>
+                                <ListItemIcon> <CategoryIcon /> </ListItemIcon>
                                 <ListItemText primary={"Categories"} />
                             </ListItem>
                         </Link>
                         <Link to="/dashboard/courses">
                             <ListItem button key={"Courses"}>
-                                <ListItemIcon> <InboxIcon /> </ListItemIcon>
+                                <ListItemIcon> <AssignmentIcon /> </ListItemIcon>
                                 <ListItemText primary={"Courses"} />
-                            </ListItem>
-                        </Link>
-                        <Link to="#" onClick={logout} >
-                            <ListItem button key={"Logout"}>
-                                <ListItemIcon> <InboxIcon /> </ListItemIcon>
-                                <ListItemText primary={"Logout"} />
                             </ListItem>
                         </Link>
                     </List>

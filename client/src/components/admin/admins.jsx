@@ -1,29 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import WithAdminHeaders from '../HOC/WithAdminHeaders';
 import axios from '../../api/axios';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-});
-
+import MaterialTable, { MTableToolbar } from 'material-table';
+import Chip from '@material-ui/core/Chip';
 
 function Admins() {
 
     const [admins, setAdmins] = useState([]);
 
-    const classes = useStyles();
+    const history = useHistory();
 
     useEffect(() => {
         axios.get('/dashboard/admins')
@@ -33,33 +19,39 @@ function Admins() {
             .catch(err => console.log(err))
     }, [])
 
+    const columns = [
+        { title: 'E-mail', field: 'email' },
+        { title: 'First Name', field: 'firstName' },
+        { title: 'Last Name', field: 'lastName' },
+
+    ];
+
     return (
         <>
-            <div style={{ padding: '10px 10px' }}>
-                <Button variant="success" as={Link} to="/dashboard/admins/add" >+ Add Admin</Button>
-            </div>
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>E-mail</TableCell>
-                            <TableCell align="right">First Name</TableCell>
-                            <TableCell align="right">Last Name</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {admins.map((admin) => (
-                            <TableRow key={admin.email}>
-                                <TableCell component="th" scope="row">
-                                    {admin.email}
-                                </TableCell>
-                                <TableCell align="right">{admin.firstName}</TableCell>
-                                <TableCell align="right">{admin.lastName}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <MaterialTable
+                title="Admins Accounts"
+                columns={columns}
+                data={admins}
+                options={{
+                    headerStyle: {
+                        backgroundColor: '#01579b',
+                        color: '#FFF'
+                    }
+                }}
+                components={{
+                    Toolbar: props => (
+                        <div>
+                            <MTableToolbar {...props} />
+                            <div style={{ padding: '10px 10px' }}>
+                                <Chip label="+ Add Admin" color="primary"
+                                    onClick={() => history.push('/dashboard/admins/add')}
+                                    style={{ marginRight: 5, backgroundColor: 'green' }}
+                                />
+                            </div>
+                        </div>
+                    ),
+                }}
+            />
         </>
     )
 }

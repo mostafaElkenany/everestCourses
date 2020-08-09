@@ -8,7 +8,11 @@ import Admins from './components/admin/admins';
 import AdminForm from './components/admin/adminForm';
 import Users from './components/admin/users';
 import Courses from './components/admin/courses';
+import CourseForm from './components/admin/CourseForm'
+import CourseEditForm from './components/admin/CourseEditForm'
 import Categories from './components/admin/categories';
+import CategoryForm from './components/admin/CategoryForm'
+import CategoryEditForm from './components/admin/CategoryEditForm'
 import UserContext from './context/UserContext';
 
 function App() {
@@ -33,7 +37,11 @@ function App() {
           <AdminRoute exact path="/dashboard/admins/add" component={AdminForm} />
           <AdminRoute exact path="/dashboard/users" component={Users} />
           <AdminRoute exact path="/dashboard/courses" component={Courses} />
+          <AdminRoute exact path="/dashboard/courses/add" component={CourseForm} />
+          <AdminRoute exact path="/dashboard/courses/:id/edit" component={CourseEditForm} />
           <AdminRoute exact path="/dashboard/categories" component={Categories} />
+          <AdminRoute exact path="/dashboard/categories/add" component={CategoryForm} />
+          <AdminRoute exact path="/dashboard/categories/:id/edit" component={CategoryEditForm} />
         </UserContext.Provider>
       </BrowserRouter>
     </>

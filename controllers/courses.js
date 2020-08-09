@@ -23,8 +23,15 @@ const getOneCourse = async (req, res, next) => {
 
 const addCourse = async (req, res, next) => {
     try {
-        const { name, description, categories } = req.body;
+        const { name, description, categories, points } = req.body;
         const image = req.file;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Input validation error');
+            error.status = 400;
+            error.details = errors.array();
+            throw error;
+        }
         if (req.imageError) {
             const error = new Error(req.imageError);
             error.status = 400;
@@ -35,18 +42,12 @@ const addCourse = async (req, res, next) => {
             error.status = 400;
             throw error;
         }
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const error = new Error('Input validation error');
-            error.status = 400;
-            error.details = errors.array();
-            throw error;
-        }
-        // const parsedCat = JSON.parse(categories)
+        const parsedCat = JSON.parse(categories.replace(/&quot;/g, '"'));
         const newCourse = new Course({
             name,
             description,
-            categories,
+            categories: parsedCat,
+            points,
             image: image.path
         });
         const savedCourse = await newCourse.save();
@@ -59,7 +60,7 @@ const addCourse = async (req, res, next) => {
 const editCourse = async (req, res, next) => {
     try {
         const { params: { id } } = req;
-        const { name, description, categories } = req.body;
+        const { name, description, categories, points } = req.body;
         const image = req.file;
         if (req.imageError) {
             const error = new Error(req.imageError);
@@ -78,10 +79,12 @@ const editCourse = async (req, res, next) => {
             error.details = errors.array();
             throw error;
         }
+        const parsedCat = JSON.parse(categories.replace(/&quot;/g, '"'));
         const course = await Course.findByIdAndUpdate(id, {
             name,
             description,
-            categories,
+            categories: parsedCat,
+            points,
             image: image.path
         }, { new: true });
         res.status(200).json(course);

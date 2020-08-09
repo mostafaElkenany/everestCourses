@@ -14,7 +14,7 @@ function Users() {
                 setUsers(res.data);
             })
             .catch(err => console.log(err))
-    }, [users])
+    }, [])
 
     const handleDisable = (id) => {
         axios.post(`/dashboard/users/${id}`)
@@ -42,6 +42,12 @@ function Users() {
             title="Users Accounts"
             columns={columns}
             data={users}
+            options={{
+                headerStyle: {
+                    backgroundColor: '#01579b',
+                    color: '#FFF'
+                }
+            }}
         />
     )
 }

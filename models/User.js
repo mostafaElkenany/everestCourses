@@ -6,6 +6,13 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, required: true, minlength: 3, maxlength: 14 },
     email: { type: String, required: true, unique: true, match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ },
     password: { type: String, required: true },
+    points: { type: Number, min: 50, max: 500 },
+    courses: [
+        {
+            course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+            status: { type: Boolean, required: true, default: false }
+        }
+    ],
     isAdmin: { type: Boolean, required: true, default: false },
     disabled: { type: Boolean, required: true, default: false },
 })

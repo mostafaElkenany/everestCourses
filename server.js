@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
+const userRouter = require('./routes/user');
 const errorHandler = require('./middleware/errorHandler');
 const { auth, isAdmin } = require('./middleware/auth');
 
@@ -32,6 +33,7 @@ app.use('/uploads', express.static('uploads'))
 
 //routes set up
 app.use("/", authRouter);
+app.use("/", userRouter);
 app.use("/dashboard", [auth, isAdmin], adminRouter);
 
 //error handling middleware
