@@ -5,10 +5,16 @@ const Category = require('../models/Category');
 const Course = require('../models/Course');
 const User = require('../models/User');
 const { auth } = require('../middleware/auth');
+const paginate = require('../middleware/pagination');
 
 const router = express.Router();
 
-router.get('/courses', getCourses);
+
+
+router.get('/courses', paginate(Course), async (req, res, next) => {
+    res.status(200).json(res.paginatedResults)
+});
+
 router.get('/categories', getCategories);
 router.get('/categories/:id', async (req, res, next) => {
     try {
