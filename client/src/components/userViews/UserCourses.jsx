@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import CourseCard from './CourseCard'
 import WithUserHeaders from '../HOC/WithUserHeaders'
 import axios from '../../api/axios'
+import Points from './Points';
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -21,18 +22,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CategoryCourses(props) {
+
+    const myCoursesFlag = true;
     const classes = useStyles();
     const [userCourses, setUserCourses] = useState([])
+    const [points, setPoints] = useState(0)
+
     useEffect(() => {
         axios.get(`/user/courses`)
             .then(res => {
-                setUserCourses(res.data);
+                setUserCourses(res.data.courses);
+                setPoints(res.data.points);
             })
             .catch(err => console.log(err))
     }, [])
+
+    const updateUserCourses = (newCourses) => {
+        setUserCourses(newCourses)
+    }
+
+    const updatePoints = (points) => {
+        setPoints(points)
+    }
+
     return (
         <>
             <main>
+                <Points points={points} />
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
@@ -42,7 +58,12 @@ function CategoryCourses(props) {
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
                     <Grid container spacing={4}>
-                        {userCourses.map((userCourse) => <CourseCard key={userCourse._id} course={userCourse.course} />)}
+                        {userCourses.map((userCourse) => {
+                            return <CourseCard key={userCourse._id} updateUserCourses={updateUserCourses}
+                                updatePoints={updatePoints} course={userCourse.course}
+                                status={userCourse.status} myCoursesFlag={myCoursesFlag} />
+                        }
+                        )}
                     </Grid>
                 </Container>
             </main>

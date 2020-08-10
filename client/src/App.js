@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import Home from './components/userViews/Home';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import { AdminRoute, UserRoute } from './components/auth/authRoutes';
+import { AdminRoute, UserRoute } from './components/auth/PrivateRoutes';
 import Admins from './components/admin/admins';
 import AdminForm from './components/admin/adminForm';
 import Users from './components/admin/users';

@@ -8,14 +8,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 function NavBar() {
+
     const { userData, setUserData } = useContext(UserContext);
+    const [anchorEl, setAnchorEl] = useState(null);
     const history = useHistory();
+    
     const logout = () => {
         localStorage.removeItem("auth-token");
         setUserData(null)
         history.push("/login");
     }
-    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -35,13 +37,13 @@ function NavBar() {
                         <Nav.Link as={Link} to="/" >  Home </Nav.Link>
                         <Nav.Link as={Link} to="/categories" >Categories</Nav.Link>
                         {
-                            userData && userData.id ?
+                            userData ?
                                 <Nav.Link as={Link} to="/mycourses" >My Courses</Nav.Link>
                                 : null
                         }
                     </Nav>
                     {
-                        userData && userData.id ?
+                        userData ?
                             <>
                                 <Button aria-controls="simple-menu"
                                     variant="contained"

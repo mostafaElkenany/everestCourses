@@ -21,21 +21,21 @@ router.get('/categories/:id', async (req, res, next) => {
     }
 })
 
-router.post('/courses/:id', auth, async (req, res, next) => {
+router.post('/user/courses/:id', auth, async (req, res, next) => {
     try {
         const courseId = req.params.id;
-        const currentUser = await User.findById(req.user.id);
+        const currentUser = await User.findById(req.user.id).populate('courses.course');
         const course = await Course.findById(courseId);
         //check if course is registered
-        const isRegistered = currentUser.courses.find(userCourse => userCourse.course.toString() === courseId)
+        const isRegistered = currentUser.courses.find(userCourse => userCourse.course._id.toString() === courseId)
         if (isRegistered) {
             const error = new Error('Course already registered');
             error.status = 400;
             throw error;
         }
-        currentUser.courses.push({ course: course._id, status: false })
+        currentUser.courses.push({ course: course, status: false })
         await currentUser.save()
-        res.json(currentUser);
+        res.json(currentUser.courses);
 
     } catch (error) {
         next(error);
@@ -46,7 +46,7 @@ router.post('/courses/:id', auth, async (req, res, next) => {
 router.get('/user/courses', auth, async (req, res, next) => {
     try {
         const currentUser = await User.findById(req.user.id).populate('courses.course');
-        res.json(currentUser.courses);
+        res.json({ courses: currentUser.courses, points: currentUser.points });
     } catch (error) {
         next(error)
     }
@@ -56,10 +56,14 @@ router.delete('/user/courses/:id', auth, async (req, res, next) => {
     try {
         const courseId = req.params.id;
         const course = await Course.findById(courseId);
-        const currentUser = await User.findById(req.user.id);
-        await currentUser.updateOne({ $pull: { courses: { course: course } } })
+        const currentUser = await User.findByIdAndUpdate(
+            req.user.id,
+            { $pull: { courses: { course: course } } },
+            { new: true }
+        )
+            .populate('courses.course');
         await currentUser.save();
-        res.json(currentUser);
+        res.json(currentUser.courses);
     } catch (error) {
         next(error)
     }
@@ -77,7 +81,7 @@ router.patch('/user/courses/:id', auth, async (req, res, next) => {
             currentUser.points ? currentUser.points -= userCourse.course.points : currentUser.points = 0
         }
         await currentUser.save();
-        res.json(currentUser);
+        res.json({ courses: currentUser.courses, points: currentUser.points });
     } catch (error) {
         next(error)
     }
