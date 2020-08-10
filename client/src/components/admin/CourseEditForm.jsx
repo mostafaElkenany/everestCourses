@@ -149,16 +149,20 @@ function CourseEditForm(props) {
                                 label="Points"
                                 type="number"
                                 name="points"
+                                value={course.points}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                                 onChange={handleChange}
                                 error={errors.points ? true : false}
                                 helperText={errors.points}
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <InputLabel id="demo-mutiple-name-label">Category</InputLabel>
+                            <InputLabel id="label">Category</InputLabel>
                             <Select
                                 fullWidth
-                                labelId="demo-mutiple-name-label"
+                                labelId="label"
                                 id="demo-mutiple-name"
                                 value={selectedCat}
                                 multiple
@@ -177,6 +181,7 @@ function CourseEditForm(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <InputLabel id="demo-mutiple-name-label">Image</InputLabel>
+                            <img style={{ width: 100, height: 100 }} src={`/${course.image}`} alt="" />
                             <Input
                                 type="file"
                                 name="image"

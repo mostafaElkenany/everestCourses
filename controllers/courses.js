@@ -67,11 +67,7 @@ const editCourse = async (req, res, next) => {
             error.status = 400;
             throw error;
         }
-        if (!image) {
-            const error = new Error("Image required");
-            error.status = 400;
-            throw error;
-        }
+
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const error = new Error('Input validation error');
@@ -80,13 +76,24 @@ const editCourse = async (req, res, next) => {
             throw error;
         }
         const parsedCat = JSON.parse(categories.replace(/&quot;/g, '"'));
-        const course = await Course.findByIdAndUpdate(id, {
-            name,
-            description,
-            categories: parsedCat,
-            points,
-            image: image.path
-        }, { new: true });
+        let updateObj = {}
+        if (image) {
+            updateObj = {
+                name,
+                description,
+                categories: parsedCat,
+                points,
+                image: image.path
+            }
+        } else {
+            updateObj = {
+                name,
+                description,
+                categories: parsedCat,
+                points,
+            }
+        }
+        const course = await Course.findByIdAndUpdate(id, updateObj, { new: true });
         res.status(200).json(course);
     } catch (error) {
         next(error);

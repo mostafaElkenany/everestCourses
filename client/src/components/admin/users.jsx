@@ -19,8 +19,8 @@ function Users() {
     const handleDisable = (id) => {
         axios.post(`/dashboard/users/${id}`)
             .then(res => {
-                console.log(res.data);
-                setUsers([...users, res.data]);
+                // console.log(res.data);
+                setUsers(users.map(user => user._id === res.data._id ? res.data : user));
 
             })
             .catch(err => console.log(err.response))

@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Pagination from '@material-ui/lab/Pagination';
 import CourseCard from './CourseCard'
 import WithUserHeaders from '../HOC/WithUserHeaders'
 import UserContext from '../../context/UserContext';
@@ -11,6 +12,11 @@ import axios from '../../api/axios'
 
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > * + *': {
+            margin: theme.spacing(2),
+        },
+    },
     icon: {
         marginRight: theme.spacing(2),
     },
@@ -31,11 +37,16 @@ function Home() {
     const [courses, setCourses] = useState([])
     const [points, setPoints] = useState(0)
     const [userCourses, setUserCourses] = useState([]);
+    const [page, setPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
 
     useEffect(() => {
-        //get all courses
-        axios.get('/courses')
-            .then(res => setCourses(res.data))
+        //get courses paginated
+        axios.get(`/courses?page=${page}&limit=3`)
+            .then(res => {
+                setCourses(res.data.courses);
+                setPageCount(res.data.pages);
+            })
             .catch(err => console.log(err))
         //get user courses and points
         if (userData) {
@@ -46,7 +57,7 @@ function Home() {
                 })
                 .catch(err => console.log(err))
         }
-    }, [userData])
+    }, [userData, page])
 
     const updateUserCourses = (newCourses) => {
         setUserCourses(newCourses)
@@ -55,6 +66,10 @@ function Home() {
     const updatePoints = (points) => {
         setPoints(points)
     }
+
+    const handlePage = (event, value) => {
+        setPage(value);
+    };
 
     return (
         <>
@@ -80,6 +95,10 @@ function Home() {
                         }
                         )}
                     </Grid>
+                    <div className={classes.root}>
+                        <Typography>Page: {page}</Typography>
+                        <Pagination count={pageCount} page={page} onChange={handlePage} />
+                    </div>
                 </Container>
             </main>
 

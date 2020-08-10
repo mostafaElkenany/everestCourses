@@ -84,7 +84,7 @@ const login = async (req, res, next) => {
             throw error;
         } else {
             if (user.disabled) {
-                const error = new Error('Account disabled');
+                const error = new Error('Account disabled, please contact administrator');
                 error.status = 400;
                 throw error;
             }
