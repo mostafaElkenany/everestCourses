@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     disabled: { type: Boolean, required: true, default: false },
 })
 
+//Hashing user password before save
 userSchema.pre('save', async function () {
     const user = this;
     if (user.isModified('password')) {

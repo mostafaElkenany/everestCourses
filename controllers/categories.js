@@ -73,10 +73,22 @@ const deleteCategory = async (req, res, next) => {
 
 }
 
+const getCategoryCourses = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const category = await Category.findById(id);
+        const courses = await Course.find({ categories: { "$in": [category] } });
+        res.json({ courses, category });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getCategories,
     getOneCategory,
     addCategory,
     editCategory,
     deleteCategory,
+    getCategoryCourses,
 }

@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Pagination from '@material-ui/lab/Pagination';
+import Button from '@material-ui/core/Button';
 import CourseCard from './CourseCard'
 import WithUserHeaders from '../HOC/WithUserHeaders'
 import UserContext from '../../context/UserContext';
@@ -33,6 +35,7 @@ function Home() {
 
     const { userData } = useContext(UserContext);
 
+    const history = useHistory();
     const classes = useStyles();
     const [courses, setCourses] = useState([])
     const [points, setPoints] = useState(0)
@@ -74,17 +77,21 @@ function Home() {
     return (
         <>
             <main>
-                <Points points={points} />
+                {userData ? <Points points={points} /> : null}
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                            Welcome
+                            {userData ? `Hi,${userData.name.split(' ')[0]}` : "Welcome"}
                         </Typography>
                         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            Something short and leading about the collection below—its contents, the creator, etc.
-                            Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-                            entirely.
-            </Typography>
+                            Build skills with courses, certificates,
+                            and degrees online from world-class universities and companies.
+
+                        {userData ? null : <Button onClick={() => history.push('/register')}
+                                variant="contained" size="small" color="primary">
+                                Join For Free
+                            </Button>}
+                        </Typography>
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">

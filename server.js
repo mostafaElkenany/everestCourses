@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const userRouter = require('./routes/user');
-const errorHandler = require('./middleware/errorHandler');
-const { auth, isAdmin } = require('./middleware/auth');
+const errorHandler = require('./middlewares/errorHandler');
+const { auth, isAdmin } = require('./middlewares/auth');
 
 require('dotenv').config();
 

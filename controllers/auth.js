@@ -8,7 +8,6 @@ const register = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(400).json({ errors: errors.array() });
             const error = new Error('Input validation error');
             error.status = 400;
             error.details = errors.array();
@@ -28,7 +27,6 @@ const register = async (req, res, next) => {
         return res.json(savedUser);
 
     } catch (error) {
-        // res.status(500).send(error.message);
         next(error);
     }
 }
@@ -38,7 +36,6 @@ const registerAdmin = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(400).json({ errors: errors.array() });
             const error = new Error('Input validation error');
             error.status = 400;
             error.details = errors.array();
@@ -58,7 +55,6 @@ const registerAdmin = async (req, res, next) => {
         return res.json(savedUser);
 
     } catch (error) {
-        // res.status(500).send(error.message);
         next(error);
     }
 }
@@ -68,7 +64,6 @@ const login = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(400).json({ errors: errors.array() });
             const error = new Error('Input validation error');
             error.status = 400;
             error.details = errors.array();
@@ -78,7 +73,6 @@ const login = async (req, res, next) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (!user) {
-            // return res.status(400).send('wrong email or password');
             const error = new Error('wrong email or password');
             error.status = 400;
             throw error;
@@ -90,7 +84,6 @@ const login = async (req, res, next) => {
             }
             const match = await bcrypt.compare(password, user.password);
             if (!match) {
-                // return res.status(400).send('wrong email or password');
                 const error = new Error('wrong email or password');
                 error.status = 400;
                 throw error;
@@ -100,11 +93,10 @@ const login = async (req, res, next) => {
                 email: user.email,
                 name: `${user.firstName} ${user.lastName}`,
                 isAdmin: user.isAdmin,
-            }, process.env.JWT_SECRET);
+            }, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.json({ token })
         }
     } catch (err) {
-        // res.status(400).send(error.message);
         next(err);
     }
 }
