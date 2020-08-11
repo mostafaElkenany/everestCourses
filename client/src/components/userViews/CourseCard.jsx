@@ -43,7 +43,7 @@ function CourseCard(props) {
     // find single user course from user courses array
     let userCourse = {};
     if (userData && !myCoursesFlag) {
-        userCourse = userCourses.find((userCourse) => userCourse.course._id === course._id)
+        if (userCourses) userCourse = userCourses.find((userCourse) => userCourse.course._id === course._id)
     }
 
     const classes = useStyles();
