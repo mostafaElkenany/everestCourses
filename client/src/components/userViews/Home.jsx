@@ -45,7 +45,7 @@ function Home() {
 
     useEffect(() => {
         //get courses paginated
-        axios.get(`/courses?page=${page}&limit=3`)
+        axios.get(`/courses?page=${page}&limit=9`)
             .then(res => {
                 setCourses(res.data.courses);
                 setPageCount(res.data.pages);
