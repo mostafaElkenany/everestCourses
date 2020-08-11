@@ -61,7 +61,7 @@ function CategoryCourses(props) {
     return (
         <>
             <main>
-                <Points points={points} />
+                {userData ? <Points points={points} /> : null}
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
