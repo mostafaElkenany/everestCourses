@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 const authRouter = require('./routes/auth');
 const adminRouter = require('./routes/admin');
 const userRouter = require('./routes/user');
@@ -38,6 +39,14 @@ app.use("/dashboard", [auth, isAdmin], adminRouter);
 
 //error handling middleware
 app.use(errorHandler);
+
+//Production set up
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "client", "build")))
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+    });
+}
 
 const port = process.env.PORT || 5000;
 
